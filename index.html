@@ -3,419 +3,459 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LEGEND</title>
+    <meta name="theme-color" content="#ff3366">
+    <title>LEGEND - Roadside Triage</title>
+    <link rel="manifest" href="manifest.json">
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Playfair+Display:wght@700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=Roboto+Mono:wght@400;700&display=swap');
         
         :root {
-            --gold: #d4af37;
-            --dark: #0f0f0f;
+            --primary: #ff3366;
+            --dark: #0a0a0a;
             --card: #1a1a1a;
-            --text: #f5f5f5;
-            --subtle: #aaa;
         }
         
-        * { box-sizing: border-box; }
-        
         body {
-            font-family: 'Inter', system_ui, -apple-system, sans-serif;
+            font-family: 'Inter', system_ui, sans-serif;
             margin: 0;
             padding: 0;
             background: var(--dark);
-            color: var(--text);
-            line-height: 1.5;
-            -webkit-font-smoothing: antialiased;
+            color: #eee;
+            line-height: 1.6;
         }
         
         .container {
-            max-width: 480px;
+            max-width: 900px;
             margin: 0 auto;
-            padding: 16px;
-            min-height: 100vh;
+            padding: 20px;
         }
         
         header {
             text-align: center;
-            padding: 20px 0 30px;
+            padding: 30px 20px 15px;
+            border-bottom: 1px solid #333;
         }
         
-        .logo {
-            font-family: 'Playfair Display', Georgia, serif;
-            font-size: 2.8rem;
+        .legend-logo {
+            font-family: 'Roboto Mono', monospace;
+            letter-spacing: 4px;
             font-weight: 700;
-            color: var(--gold);
-            letter-spacing: -1px;
-            margin: 0;
+            font-size: 1.5rem;
+            color: #ff3366;
         }
         
-        .subtitle {
-            color: var(--subtle);
-            font-size: 0.95rem;
-            margin: 8px 0 0;
-            font-weight: 400;
+        h1 {
+            color: var(--primary);
+            font-size: 2.4rem;
+            margin: 8px 0 5px;
+            font-weight: 700;
         }
         
-        .section {
-            background: var(--card);
-            border-radius: 20px;
-            padding: 20px;
-            margin-bottom: 20px;
-            border: 1px solid #222;
+        .tagline {
+            color: #aaa;
+            font-size: 1rem;
         }
         
-        .section-title {
-            font-size: 0.85rem;
-            font-weight: 600;
-            color: var(--gold);
-            margin: 0 0 14px;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-        
-        .choice-btn {
-            width: 100%;
-            background: #222;
-            border: 1px solid #333;
-            color: white;
-            padding: 18px 20px;
+        .safety-gate {
+            background: #2a0000;
+            border: 2px solid #ff3366;
             border-radius: 16px;
-            text-align: left;
-            margin-bottom: 12px;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            font-size: 1rem;
+            padding: 25px;
+            margin: 25px 0;
+            text-align: center;
         }
         
-        .choice-btn:hover, .choice-btn:active {
-            background: #2a2a2a;
-            border-color: var(--gold);
-            transform: translateY(-1px);
+        .main-app {
+            display: none;
         }
         
-        .choice-btn strong {
-            display: block;
-            font-size: 1.05rem;
-            margin-bottom: 4px;
-        }
-        
-        .choice-btn span {
-            color: var(--subtle);
-            font-size: 0.9rem;
-        }
-        
-        .input-group {
-            margin-bottom: 12px;
-        }
-        
-        .input-group label {
-            display: block;
-            font-size: 0.85rem;
-            color: var(--subtle);
-            margin-bottom: 8px;
-        }
-        
-        input[type="text"] {
-            width: 100%;
-            background: #222;
-            border: 1px solid #333;
-            color: white;
-            padding: 16px 18px;
-            border-radius: 14px;
-            font-size: 1rem;
-            outline: none;
-        }
-        
-        input[type="text"]:focus {
-            border-color: var(--gold);
-        }
-        
-        .skip-note {
-            font-size: 0.8rem;
-            color: #666;
-            margin-top: 8px;
+        .symptom-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 12px;
+            margin: 25px 0;
         }
         
         .symptom-btn {
-            width: 100%;
             background: #222;
-            border: 1px solid #333;
+            border: 2px solid #444;
             color: white;
-            padding: 18px 20px;
-            border-radius: 16px;
-            text-align: left;
-            margin-bottom: 12px;
+            padding: 18px 12px;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: 600;
             cursor: pointer;
             transition: all 0.2s ease;
+            text-align: center;
         }
         
         .symptom-btn:hover {
-            background: #2a2a2a;
-            border-color: var(--gold);
-        }
-        
-        .symptom-btn strong {
-            display: block;
-            font-size: 1.05rem;
-        }
-        
-        .symptom-btn span {
-            color: var(--subtle);
-            font-size: 0.9rem;
-        }
-        
-        .results-header {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            margin-bottom: 20px;
-        }
-        
-        .back-btn {
-            background: none;
-            border: 1px solid #444;
-            color: #aaa;
-            padding: 10px 18px;
-            border-radius: 999px;
-            font-size: 0.9rem;
-            cursor: pointer;
+            background: #ff3366;
+            border-color: #ff3366;
+            transform: translateY(-2px);
         }
         
         .lane {
-            background: var(--card);
-            border-radius: 20px;
-            padding: 22px;
-            margin-bottom: 16px;
-            border-left: 6px solid;
+            margin: 20px 0;
+            padding: 20px;
+            border-radius: 14px;
+            border-left: 7px solid;
         }
         
-        .lane.tow { border-left-color: #ff4d4d; }
-        .lane.shop { border-left-color: #ffaa00; }
-        .lane.diy { border-left-color: #4ade80; }
+        .lane.tow-now {
+            background: #2a0000;
+            border-left-color: #ff3366;
+        }
+        
+        .lane.shop-soon {
+            background: #2a2200;
+            border-left-color: #ffaa00;
+        }
+        
+        .lane.diy {
+            background: #002a00;
+            border-left-color: #00cc66;
+        }
         
         .lane h3 {
-            margin: 0 0 14px;
-            font-size: 1.25rem;
+            margin: 0 0 12px;
+            font-size: 1.35rem;
         }
         
         .do-dont {
-            background: rgba(255,255,255,0.04);
-            padding: 14px 16px;
-            border-radius: 12px;
+            background: rgba(255,255,255,0.05);
+            padding: 12px;
+            border-radius: 8px;
             margin: 10px 0;
-            font-size: 0.95rem;
         }
         
         .do-dont strong {
-            color: #ffcc66;
-            display: block;
-            margin-bottom: 4px;
+            color: #ffcc00;
         }
         
         .why {
             font-style: italic;
-            color: #999;
-            font-size: 0.9rem;
-            padding-left: 4px;
+            color: #ccc;
+            border-left: 3px solid #555;
+            padding-left: 12px;
+            font-size: 0.95rem;
         }
         
-        .safety-bar {
-            background: #1f1f1f;
-            padding: 12px 16px;
-            border-radius: 14px;
+        .back-btn {
+            background: #333;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.95rem;
+            margin-bottom: 15px;
+        }
+        
+        .safety-note {
+            background: #1a0033;
+            padding: 12px;
+            border-radius: 8px;
+            margin: 12px 0;
             font-size: 0.9rem;
-            color: #ccc;
-            margin: 20px 0;
         }
         
         .footer {
             text-align: center;
-            padding: 30px 10px 20px;
-            color: #555;
-            font-size: 0.8rem;
+            padding: 30px 20px 15px;
+            color: #666;
+            font-size: 0.85rem;
+        }
+        
+        .install-btn {
+            background: #00cc66;
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            margin: 10px auto;
+            display: block;
+        }
+        
+        .offline-banner {
+            background: #003322;
+            color: #00ffaa;
+            text-align: center;
+            padding: 8px;
+            font-size: 0.85rem;
+            display: none;
+        }
+        
+        .vehicle-section {
+            background: #1a1a1a;
+            border-radius: 12px;
+            padding: 15px;
+            margin: 20px 0;
+        }
+        
+        .vehicle-input {
+            width: 100%;
+            padding: 10px;
+            margin: 8px 0;
+            background: #222;
+            border: 1px solid #444;
+            color: white;
+            border-radius: 6px;
+            font-size: 1rem;
+        }
+        
+        .save-btn {
+            background: #ff3366;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.95rem;
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <!-- Header -->
         <header>
-            <h1 class="logo">Legend</h1>
-            <p class="subtitle">Calm roadside help when things go sideways.<br>with a luxury badge feel</p>
+            <div class="legend-logo">LEGEND</div>
+            <h1>Roadside Triage</h1>
+            <p class="tagline">Your map when you're stuck. Fast answers. Get moving again.</p>
         </header>
         
+        <div id="offline-banner" class="offline-banner">
+            📡 Offline mode — using saved data
+        </div>
+        
+        <!-- Install Button -->
+        <button id="install-btn" class="install-btn" style="display:none;">📲 Install LEGEND App</button>
+        
         <!-- Safety Gate -->
-        <div id="safety-gate">
-            <div class="section">
-                <div class="section-title">1. FIRST, ARE YOU SAFE?</div>
-                
-                <button class="choice-btn" onclick="confirmSafety(true)">
-                    <strong>I'm safe and off the road.</strong>
-                    <span>Parking lot, side street, or somewhere I can breathe for a second.</span>
-                </button>
-                
-                <button class="choice-btn" onclick="confirmSafety(false)">
-                    <strong>I'm stuck somewhere sketchy.</strong>
-                    <span>Highway shoulder, live traffic, or any spot that feels risky.</span>
-                </button>
+        <div id="safety-gate" class="safety-gate">
+            <h2 style="color: #ff3366; margin-top:0;">🚨 SAFETY FIRST</h2>
+            <p style="font-size:1.05rem; max-width:480px; margin:12px auto;">Are you currently in a <strong>safe location</strong> off the road or highway?</p>
+            <div style="margin-top:20px;">
+                <button onclick="confirmSafety()" style="background:#00cc66; color:white; border:none; padding:12px 30px; font-size:1rem; border-radius:10px; cursor:pointer; margin:6px;">✅ YES - I'm Safe</button>
+                <button onclick="showSafetyHelp()" style="background:#ff3366; color:white; border:none; padding:12px 30px; font-size:1rem; border-radius:10px; cursor:pointer; margin:6px;">❌ NO - Need Help Moving</button>
             </div>
         </div>
         
-        <!-- Main App -->
-        <div id="main-app" style="display: none;">
-            
-            <!-- Vehicle Input -->
-            <div class="section">
-                <div class="section-title">2. WHAT ARE YOU DRIVING?</div>
-                <div class="input-group">
-                    <input type="text" id="vehicle" placeholder="e.g. 2008 Chevy Silverado" value="">
-                </div>
-                <p class="skip-note">You can skip this, but it helps make the answer feel more specific.</p>
+        <div id="main-app" class="main-app">
+            <!-- My Vehicles (local save) -->
+            <div class="vehicle-section">
+                <h3 style="margin:0 0 10px; color:#ffcc00;">🚗 My Vehicles (Saved locally)</h3>
+                <input id="year" class="vehicle-input" placeholder="Year (e.g. 2018)" type="number">
+                <input id="make" class="vehicle-input" placeholder="Make (e.g. Ford)">
+                <input id="model" class="vehicle-input" placeholder="Model (e.g. F-150)">
+                <button onclick="saveVehicle()" class="save-btn">Save Vehicle</button>
+                <div id="saved-vehicles" style="margin-top:10px; font-size:0.9rem; color:#aaa;"></div>
             </div>
             
             <!-- Symptom Selection -->
-            <div class="section">
-                <div class="section-title">3. WHAT FEELS CLOSEST?</div>
-                
-                <button class="symptom-btn" onclick="selectSymptom('shaking')">
-                    <strong>My car is shaking.</strong>
-                    <span>Wobble, vibration, rough, or sketchy feeling.</span>
-                </button>
-                
-                <button class="symptom-btn" onclick="selectSymptom('nostart')">
-                    <strong>Won't start / died.</strong>
-                    <span>No crank, no start, or quit while driving.</span>
-                </button>
-                
-                <button class="symptom-btn" onclick="selectSymptom('overheat')">
-                    <strong>Overheating.</strong>
-                    <span>Temp high. steam. coolant smell. or warning light.</span>
-                </button>
-                
-                <button class="symptom-btn" onclick="selectSymptom('deadbat')">
-                    <strong>Dead battery.</strong>
-                    <span>Completely dead. no power. or clicking.</span>
-                </button>
-                
-                <button class="symptom-btn" onclick="selectSymptom('flattire')">
-                    <strong>Flat tire.</strong>
-                    <span>Low or flat tire. or damaged rim.</span>
-                </button>
-                
-                <button class="symptom-btn" onclick="selectSymptom('nocrank')">
-                    <strong>No crank / no start.</strong>
-                    <span>Nothing happens when I turn the key.</span>
-                </button>
+            <div id="symptom-screen">
+                <h2 style="text-align:center; color:#ffcc00; margin-bottom:5px;">What's happening?</h2>
+                <div class="symptom-grid">
+                    <div class="symptom-btn" onclick="selectSymptom('shaking')">🌪️ Shaking / Vibration</div>
+                    <div class="symptom-btn" onclick="selectSymptom('nostart')">🔥 No-start / Died while driving</div>
+                    <div class="symptom-btn" onclick="selectSymptom('overheat')">🌡️ Overheating</div>
+                    <div class="symptom-btn" onclick="selectSymptom('deadbat')">🔋 Dead Battery</div>
+                    <div class="symptom-btn" onclick="selectSymptom('flattire')">🛞 Flat Tire</div>
+                    <div class="symptom-btn" onclick="selectSymptom('nocrank')">⚡ No Crank</div>
+                </div>
             </div>
-        </div>
-        
-        <!-- Results -->
-        <div id="results" style="display: none;">
-            <div class="results-header">
+            
+            <!-- Results -->
+            <div id="results" style="display:none;">
                 <button onclick="backToSymptoms()" class="back-btn">← Back</button>
-                <div style="flex:1; font-weight:600; color:#ddd;">Your options</div>
-            </div>
-            
-            <div id="lanes-container"></div>
-            
-            <div class="safety-bar">
-                <strong>⚠️ Side road / exit advice:</strong> If on the highway, take the next safe exit or rest stop. Don't push it.
+                <div id="lanes-container"></div>
+                <div class="safety-note">
+                    <strong>⚠️ Side Road / Exit:</strong> Take the next safe exit or rest stop. Do not drive far with issues.
+                </div>
             </div>
         </div>
         
         <div class="footer">
-            LEGEND • Your map when you're stuck
+            <p>LEGEND • Roadside guidance • Works offline</p>
         </div>
     </div>
 
     <script>
-        let currentVehicle = '';
+        // PWA Install
+        let deferredPrompt;
+        const installBtn = document.getElementById('install-btn');
         
-        function confirmSafety(isSafe) {
-            if (!isSafe) {
-                alert("🚨 Stay in your vehicle if possible.\nTurn on hazards.\nCall for help or move to safety when traffic allows.\n\nPrioritize your safety first.");
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+            deferredPrompt = e;
+            installBtn.style.display = 'block';
+        });
+        
+        installBtn.addEventListener('click', async () => {
+            if (deferredPrompt) {
+                deferredPrompt.prompt();
+                const { outcome } = await deferredPrompt.userChoice;
+                if (outcome === 'accepted') {
+                    installBtn.style.display = 'none';
+                }
+                deferredPrompt = null;
             }
+        });
+        
+        // Service Worker Registration
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('./sw.js')
+                    .then(reg => console.log('LEGEND SW registered'))
+                    .catch(err => console.log('SW registration failed'));
+            });
+        }
+        
+        // Offline detection
+        function updateOnlineStatus() {
+            const banner = document.getElementById('offline-banner');
+            if (!navigator.onLine) {
+                banner.style.display = 'block';
+            } else {
+                banner.style.display = 'none';
+            }
+        }
+        window.addEventListener('online', updateOnlineStatus);
+        window.addEventListener('offline', updateOnlineStatus);
+        window.addEventListener('load', updateOnlineStatus);
+        
+        // Vehicle saving (localStorage)
+        function saveVehicle() {
+            const year = document.getElementById('year').value;
+            const make = document.getElementById('make').value;
+            const model = document.getElementById('model').value;
+            
+            if (!year || !make || !model) {
+                alert('Please fill year, make, and model');
+                return;
+            }
+            
+            let vehicles = JSON.parse(localStorage.getItem('legendVehicles') || '[]');
+            vehicles.push({year, make, model, saved: new Date().toISOString()});
+            localStorage.setItem('legendVehicles', JSON.stringify(vehicles));
+            
+            document.getElementById('year').value = '';
+            document.getElementById('make').value = '';
+            document.getElementById('model').value = '';
+            
+            loadSavedVehicles();
+            alert('Vehicle saved locally!');
+        }
+        
+        function loadSavedVehicles() {
+            const container = document.getElementById('saved-vehicles');
+            let vehicles = JSON.parse(localStorage.getItem('legendVehicles') || '[]');
+            
+            if (vehicles.length === 0) {
+                container.innerHTML = '<em>No vehicles saved yet</em>';
+                return;
+            }
+            
+            container.innerHTML = vehicles.map((v, i) => 
+                `<div style="margin:4px 0; padding:6px; background:#222; border-radius:6px;">
+                    ${v.year} ${v.make} ${v.model} 
+                    <span onclick="deleteVehicle(${i})" style="color:#ff6666; cursor:pointer; float:right;">✕</span>
+                </div>`
+            ).join('');
+        }
+        
+        function deleteVehicle(index) {
+            let vehicles = JSON.parse(localStorage.getItem('legendVehicles') || '[]');
+            vehicles.splice(index, 1);
+            localStorage.setItem('legendVehicles', JSON.stringify(vehicles));
+            loadSavedVehicles();
+        }
+        
+        function confirmSafety() {
             document.getElementById('safety-gate').style.display = 'none';
             document.getElementById('main-app').style.display = 'block';
+            loadSavedVehicles();
+        }
+        
+        function showSafetyHelp() {
+            alert("🚨 PRIORITIZE SAFETY:\n\n1. Turn on hazard lights\n2. Move to shoulder or nearest exit if safe\n3. Stay in vehicle if traffic is heavy\n4. Call for help if needed\n\nDo NOT stand on the road!");
         }
         
         const cases = {
             shaking: {
                 name: "Shaking / Vibration",
-                tow: { title: "🚨 TOW NOW", do: "Call for a tow immediately. Do not drive.", dont: "Drive at speed.", why: "Severe vibration can mean suspension or driveline failure." },
-                shop: { title: "🛠️ SHOP SOON", do: "Schedule inspection soon. Drive slow and careful.", dont: "Ignore or highway drive.", why: "Often tires, wheels, CV joints or mounts." },
-                diy: { title: "🔧 BASIC DIY", do: "Check tire pressure and condition. Tighten lugs.", dont: "Drive if strong vibration.", why: "Rules out simple tire issues first." }
+                tow: { title: "🚨 TOW NOW", do: "Call for a tow immediately. Do not drive.", dont: "Drive at speed.", why: "Risk of suspension or wheel failure." },
+                shop: { title: "🛠️ SHOP SOON", do: "Schedule inspection soon.", dont: "Ignore high speeds.", why: "Tires, CV joints or mounts." },
+                diy: { title: "🔧 BASIC DIY", do: "Check tire pressure and lugs.", dont: "Drive if severe.", why: "Rules out simple tire issues." }
             },
             nostart: {
-                name: "Won't Start / Died While Driving",
-                tow: { title: "🚨 TOW NOW", do: "Tow to shop. Could be timing belt/chain or major electrical.", dont: "Keep trying to start.", why: "Risk of further engine damage." },
-                shop: { title: "🛠️ SHOP SOON", do: "Get diagnosed soon. Battery, alternator, or sensor likely.", dont: "Let it sit without charger.", why: "Common and can worsen fast." },
-                diy: { title: "🔧 BASIC DIY", do: "Clean battery terminals. Try one jump start. Listen for click.", dont: "Flood with fluid.", why: "Simple electrical checks first." }
+                name: "No-start / Died while driving",
+                tow: { title: "🚨 TOW NOW", do: "Tow to shop.", dont: "Keep trying to start.", why: "Timing or major failure possible." },
+                shop: { title: "🛠️ SHOP SOON", do: "Diagnose soon.", dont: "Leave dead long.", why: "Battery, starter or sensor." },
+                diy: { title: "🔧 BASIC DIY", do: "Check battery terminals and try jump once.", dont: "Flood engine.", why: "Simple electrical checks first." }
             },
             overheat: {
                 name: "Overheating",
-                tow: { title: "🚨 TOW NOW", do: "Shut off engine. Tow to shop.", dont: "Keep driving or open hot cap.", why: "Risk of head gasket or seizure." },
-                shop: { title: "🛠️ SHOP SOON", do: "Inspect cooling system (radiator, hoses, thermostat, pump).", dont: "Drive long distances.", why: "Overheating destroys engines fast." },
-                diy: { title: "🔧 BASIC DIY", do: "Check coolant level when cold. Look for leaks.", dont: "Open hot radiator.", why: "Low coolant or air pockets are common easy fixes." }
+                tow: { title: "🚨 TOW NOW", do: "Shut off and tow.", dont: "Keep driving or open hot cap.", why: "Engine damage risk." },
+                shop: { title: "🛠️ SHOP SOON", do: "Inspect cooling system.", dont: "Drive far.", why: "Cooling failure." },
+                diy: { title: "🔧 BASIC DIY", do: "Check coolant (cold engine).", dont: "Open hot radiator.", why: "Low coolant common." }
             },
             deadbat: {
                 name: "Dead Battery",
-                tow: { title: "🚨 TOW NOW (if far from help)", do: "Jump or tow if completely dead.", dont: "Leave lights on.", why: "May indicate alternator or drain." },
-                shop: { title: "🛠️ SHOP SOON", do: "Test battery + charging system.", dont: "Ignore warning lights.", why: "Often points to bigger electrical problem." },
-                diy: { title: "🔧 BASIC DIY", do: "Clean terminals. Check voltage (12.6V+ good). Try jump.", dont: "Replace without testing alternator.", why: "Corrosion or loose connections fix most cases." }
+                tow: { title: "🚨 TOW NOW (if far)", do: "Jump or tow.", dont: "Leave lights on.", why: "Alternator or drain." },
+                shop: { title: "🛠️ SHOP SOON", do: "Test battery & charging.", dont: "Ignore warnings.", why: "Electrical issue." },
+                diy: { title: "🔧 BASIC DIY", do: "Clean terminals, check voltage.", dont: "Replace without testing alternator.", why: "Corrosion is #1 fix." }
             },
             flattire: {
                 name: "Flat Tire",
-                tow: { title: "🚨 TOW NOW (if unsafe)", do: "Call tow if on highway or no safe spot.", dont: "Drive on flat.", why: "Damages rim and dangerous." },
-                shop: { title: "🛠️ SHOP SOON", do: "Professional repair or replace.", dont: "Run on spare long term.", why: "Get it done right." },
-                diy: { title: "🔧 BASIC DIY", do: "If safe: Change to spare. Inflate properly.", dont: "Attempt on busy shoulder without triangles.", why: "Most common roadside fix when safe." }
+                tow: { title: "🚨 TOW NOW (unsafe)", do: "Call tow if unsafe.", dont: "Drive on flat.", why: "Damages rim." },
+                shop: { title: "🛠️ SHOP SOON", do: "Repair or replace professionally.", dont: "Use spare long term.", why: "Proper fix needed." },
+                diy: { title: "🔧 BASIC DIY", do: "Change to spare if safe.", dont: "Attempt on busy highway.", why: "Most common fix." }
             },
             nocrank: {
-                name: "No Crank / No Start",
-                tow: { title: "🚨 TOW NOW", do: "Tow if jump fails or starter silent.", dont: "Repeated attempts.", why: "Starter, solenoid or security issue likely." },
-                shop: { title: "🛠️ SHOP SOON", do: "Diagnose starter, cables, ignition.", dont: "Ignore if intermittent.", why: "Often starter failing." },
-                diy: { title: "🔧 BASIC DIY", do: "Clean connections. Check voltage. Try jump. Listen for click.", dont: "Bypass solenoid yourself.", why: "Battery or connections fix most no-crank cases." }
+                name: "No Crank",
+                tow: { title: "🚨 TOW NOW", do: "Tow if no click.", dont: "Repeated attempts.", why: "Starter or security." },
+                shop: { title: "🛠️ SHOP SOON", do: "Diagnose starter/battery.", dont: "Ignore intermittent.", why: "Starter failing." },
+                diy: { title: "🔧 BASIC DIY", do: "Check battery, clean connections, jump test.", dont: "Bypass solenoid.", why: "Battery/connections fix most." }
             }
         };
         
-        function selectSymptom(key) {
-            const vehicle = document.getElementById('vehicle').value.trim();
-            currentVehicle = vehicle;
+        function selectSymptom(symKey) {
+            const data = cases[symKey];
+            if (!data) return;
             
-            const data = cases[key];
-            document.getElementById('main-app').style.display = 'none';
+            document.getElementById('symptom-screen').style.display = 'none';
             
             const container = document.getElementById('lanes-container');
             container.innerHTML = `
-                <h2 style="margin: 0 0 20px; color: #ddd;">${data.name}</h2>
-                
-                <div class="lane tow">
-                    <h3 style="color:#ff4d4d;">${data.tow.title}</h3>
-                    <div class="do-dont"><strong>DO RIGHT NOW</strong>${data.tow.do}</div>
-                    <div class="do-dont"><strong>DO NOT</strong>${data.tow.dont}</div>
-                    <div class="why">WHY: ${data.tow.why}</div>
+                <h2 style="text-align:center; color:#ffcc00; margin-bottom:8px;">${data.name}</h2>
+                <div class="lane tow-now">
+                    <h3 style="color:#ff3366;">${data.tow.title}</h3>
+                    <div class="do-dont"><p><strong>✅ DO:</strong> ${data.tow.do}</p></div>
+                    <div class="do-dont"><p><strong>❌ DO NOT:</strong> ${data.tow.dont}</p></div>
+                    <p class="why"><strong>WHY:</strong> ${data.tow.why}</p>
                 </div>
-                
-                <div class="lane shop">
+                <div class="lane shop-soon">
                     <h3 style="color:#ffaa00;">${data.shop.title}</h3>
-                    <div class="do-dont"><strong>DO RIGHT NOW</strong>${data.shop.do}</div>
-                    <div class="do-dont"><strong>DO NOT</strong>${data.shop.dont}</div>
-                    <div class="why">WHY: ${data.shop.why}</div>
+                    <div class="do-dont"><p><strong>✅ DO:</strong> ${data.shop.do}</p></div>
+                    <div class="do-dont"><p><strong>❌ DO NOT:</strong> ${data.shop.dont}</p></div>
+                    <p class="why"><strong>WHY:</strong> ${data.shop.why}</p>
                 </div>
-                
                 <div class="lane diy">
-                    <h3 style="color:#4ade80;">${data.diy.title}</h3>
-                    <div class="do-dont"><strong>DO RIGHT NOW</strong>${data.diy.do}</div>
-                    <div class="do-dont"><strong>DO NOT</strong>${data.diy.dont}</div>
-                    <div class="why">WHY: ${data.diy.why}</div>
+                    <h3 style="color:#00cc66;">${data.diy.title}</h3>
+                    <div class="do-dont"><p><strong>✅ DO:</strong> ${data.diy.do}</p></div>
+                    <div class="do-dont"><p><strong>❌ DO NOT:</strong> ${data.diy.dont}</p></div>
+                    <p class="why"><strong>WHY:</strong> ${data.diy.why}</p>
                 </div>
             `;
-            
             document.getElementById('results').style.display = 'block';
         }
         
         function backToSymptoms() {
             document.getElementById('results').style.display = 'none';
-            document.getElementById('main-app').style.display = 'block';
+            document.getElementById('symptom-screen').style.display = 'block';
             document.getElementById('lanes-container').innerHTML = '';
         }
     </script>
