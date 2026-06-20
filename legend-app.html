@@ -1,0 +1,945 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Legend App • Legends Garage</title>
+  <style>
+    :root {
+      --bg: #0a0a0a;
+      --card: #1a1a1a;
+      --accent: #ffcc00;
+      --text: #f0f0f0;
+      --text-muted: #aaa;
+      --red: #ff3b30;
+      --orange: #ff9500;
+      --green: #34c759;
+    }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      margin: 0;
+      padding: 0;
+      -webkit-font-smoothing: antialiased;
+    }
+    .container {
+      max-width: 420px;
+      margin: 0 auto;
+      padding: 16px;
+      min-height: 100vh;
+      box-sizing: border-box;
+    }
+    .header {
+      text-align: center;
+      padding: 20px 0 10px;
+    }
+    .header h1 {
+      font-size: 28px;
+      font-weight: 700;
+      color: var(--accent);
+      margin: 0;
+      letter-spacing: -0.5px;
+    }
+    .header p {
+      color: var(--text-muted);
+      font-size: 13px;
+      margin: 4px 0 0;
+    }
+    .section {
+      background: var(--card);
+      border-radius: 16px;
+      padding: 20px;
+      margin-bottom: 20px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+    }
+    .section-title {
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--accent);
+      margin: 0 0 16px 0;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .safety {
+      background: linear-gradient(135deg, #ff3b30, #c8102e);
+      color: white;
+      padding: 20px;
+      border-radius: 16px;
+      margin-bottom: 20px;
+      text-align: center;
+    }
+    .safety h3 {
+      margin: 0 0 8px;
+      font-size: 18px;
+    }
+    button {
+      width: 100%;
+      padding: 16px 20px;
+      font-size: 17px;
+      font-weight: 600;
+      border: none;
+      border-radius: 14px;
+      cursor: pointer;
+      transition: transform 0.1s ease, box-shadow 0.1s ease;
+      margin-bottom: 12px;
+    }
+    button:active {
+      transform: scale(0.985);
+    }
+    .btn-primary {
+      background: var(--accent);
+      color: #000;
+    }
+    .btn-secondary {
+      background: #333;
+      color: #fff;
+    }
+    .btn-small {
+      width: auto;
+      padding: 8px 14px;
+      font-size: 13px;
+      margin: 4px 0;
+    }
+    .symptom-btn {
+      background: #252525;
+      color: #fff;
+      text-align: left;
+      padding: 18px 20px;
+      font-size: 16px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .symptom-btn:hover {
+      background: #333;
+    }
+    .symptom-btn .icon {
+      font-size: 22px;
+      width: 28px;
+    }
+    .lane {
+      padding: 18px;
+      border-radius: 14px;
+      margin-bottom: 14px;
+      color: #fff;
+    }
+    .lane.tow { background: var(--red); }
+    .lane.shop { background: var(--orange); color: #000; }
+    .lane.diy { background: var(--green); color: #000; }
+    .lane h4 {
+      margin: 0 0 10px;
+      font-size: 16px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .lane .step {
+      margin-bottom: 10px;
+      padding-left: 4px;
+    }
+    .lane .step:last-child {
+      margin-bottom: 0;
+    }
+    .lane .step strong {
+      color: #fff;
+    }
+    .history-item {
+      background: #252525;
+      padding: 14px 16px;
+      border-radius: 12px;
+      margin-bottom: 10px;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .history-item:hover {
+      background: #333;
+    }
+    .history-item .date {
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+    .history-item .symptom {
+      font-weight: 600;
+      color: var(--accent);
+    }
+    .vehicle-form {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+    .vehicle-form input {
+      background: #252525;
+      border: 1px solid #444;
+      color: #fff;
+      padding: 12px;
+      border-radius: 10px;
+      font-size: 15px;
+    }
+    .vehicle-form input:focus {
+      outline: none;
+      border-color: var(--accent);
+    }
+    .results-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+    }
+    .hidden { display: none !important; }
+    .footer {
+      text-align: center;
+      padding: 20px 0;
+      font-size: 12px;
+      color: #555;
+    }
+    textarea.description-input {
+      width: 100%;
+      background: #252525;
+      border: 1px solid #444;
+      color: #fff;
+      padding: 14px;
+      border-radius: 12px;
+      font-size: 16px;
+      min-height: 80px;
+      resize: vertical;
+      box-sizing: border-box;
+    }
+    .detected-banner {
+      background: #222;
+      border: 1px solid var(--accent);
+      padding: 12px 16px;
+      border-radius: 12px;
+      margin-bottom: 16px;
+      font-size: 14px;
+    }
+    .detected-banner strong {
+      color: var(--accent);
+    }
+    .resource-card {
+      background: #252525;
+      border-radius: 12px;
+      padding: 16px;
+      margin-bottom: 14px;
+    }
+    .resource-card h5 {
+      margin: 0 0 10px;
+      color: var(--accent);
+      font-size: 15px;
+    }
+    .resource-item {
+      background: #1f1f1f;
+      padding: 12px;
+      border-radius: 10px;
+      margin-bottom: 8px;
+      font-size: 14px;
+    }
+    .resource-item .name {
+      font-weight: 600;
+      color: #fff;
+    }
+    .resource-item .detail {
+      color: #aaa;
+      font-size: 13px;
+    }
+    .add-form {
+      display: grid;
+      gap: 8px;
+      margin-top: 10px;
+    }
+    .add-form input, .add-form textarea {
+      background: #1f1f1f;
+      border: 1px solid #444;
+      color: #fff;
+      padding: 10px;
+      border-radius: 8px;
+      font-size: 14px;
+    }
+    .add-form textarea {
+      min-height: 60px;
+      resize: vertical;
+    }
+    .quick-action {
+      background: #333;
+      color: #ffcc00;
+      padding: 10px 14px;
+      border-radius: 10px;
+      font-size: 13px;
+      margin: 6px 0;
+      text-align: left;
+    }
+    .credits {
+      text-align: center;
+      font-size: 11px;
+      color: #666;
+      margin-top: 10px;
+      line-height: 1.4;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- Header -->
+    <div class="header">
+      <h1>legend app</h1>
+      <p>Legends Garage • Warman, SK</p>
+    </div>
+
+    <!-- Safety Gate -->
+    <div id="safety-screen">
+      <div class="safety">
+        <h3>⚠️ SAFETY FIRST</h3>
+        <p style="margin:8px 0 16px; font-size:15px; opacity:0.95;">
+          Are you safely pulled over, hazards on, away from traffic?
+        </p>
+        <button class="btn-primary" onclick="startApp()" style="background:#fff; color:#c8102e; font-weight:700;">
+          YES — I'M SAFE
+        </button>
+        <button onclick="alert('Pull over safely first. Your life and the tow operator\'s life matter most.')" 
+                style="background:rgba(255,255,255,0.15); color:#fff; font-size:15px;">
+          No, still driving
+        </button>
+      </div>
+      <p style="text-align:center; font-size:13px; color:#666; margin-top:10px;">
+        Side of road? Get to nearest exit or safe shoulder first.
+      </p>
+    </div>
+
+    <!-- Main App -->
+    <div id="main-app" class="hidden">
+      
+      <!-- Vehicle Profile -->
+      <div class="section">
+        <div class="section-title">Your Vehicle</div>
+        <div class="vehicle-form">
+          <input type="text" id="year" placeholder="Year (e.g. 2015)">
+          <input type="text" id="make" placeholder="Make (e.g. Ram)">
+          <input type="text" id="model" placeholder="Model (e.g. 2500)">
+          <input type="text" id="engine" placeholder="Engine (e.g. Gas)">
+        </div>
+        <button onclick="saveVehicle()" class="btn-secondary" style="margin-top:12px; padding:10px; font-size:14px;">
+          Save Vehicle Profile
+        </button>
+      </div>
+
+      <!-- Natural Language + Quick Symptoms -->
+      <div class="section">
+        <div class="section-title">What's happening?</div>
+        
+        <textarea id="description-input" class="description-input" placeholder="Describe the problem in your own words... e.g. My car is shaking making a whirr noise"></textarea>
+        <button onclick="analyzeDescription()" class="btn-primary" style="margin-top:8px;">
+          🔍 Analyze Description
+        </button>
+        
+        <p style="text-align:center; color:#666; font-size:13px; margin:12px 0 8px;">or tap a common issue</p>
+        
+        <div id="symptom-list">
+          <button class="symptom-btn" onclick="selectSymptom('shake')">
+            <span class="icon">📳</span> Shaking / Vibration
+          </button>
+          <button class="symptom-btn" onclick="selectSymptom('nostart')">
+            <span class="icon">🔌</span> No-start / Died while driving
+          </button>
+          <button class="symptom-btn" onclick="selectSymptom('overheat')">
+            <span class="icon">🌡️</span> Overheating
+          </button>
+          <button class="symptom-btn" onclick="selectSymptom('deadbat')">
+            <span class="icon">🔋</span> Dead battery
+          </button>
+          <button class="symptom-btn" onclick="selectSymptom('flattire')">
+            <span class="icon">🛞</span> Flat tire
+          </button>
+          <button class="symptom-btn" onclick="selectSymptom('nocrank')">
+            <span class="icon">🔧</span> No-crank (clicking or silent)
+          </button>
+        </div>
+      </div>
+
+      <!-- Phase 4: Modular Garage Resources -->
+      <div class="section">
+        <div class="section-title">Garage Resources (Phase 4)</div>
+        
+        <div class="resource-card">
+          <h5>🚛 Tow Providers</h5>
+          <div id="tow-list"></div>
+          <div class="add-form">
+            <input type="text" id="tow-name" placeholder="Company name">
+            <input type="text" id="tow-phone" placeholder="Phone number">
+            <textarea id="tow-notes" placeholder="Notes (e.g. 24/7, heavy duty, Warman area)"></textarea>
+            <button onclick="addTowProvider()" class="btn-small btn-secondary">+ Add Tow Provider</button>
+          </div>
+        </div>
+
+        <div class="resource-card">
+          <h5>🛠️ Preferred Shops</h5>
+          <div id="shop-list"></div>
+          <div class="add-form">
+            <input type="text" id="shop-name" placeholder="Shop name">
+            <input type="text" id="shop-phone" placeholder="Phone">
+            <textarea id="shop-notes" placeholder="Specialties / hours / notes"></textarea>
+            <button onclick="addShop()" class="btn-small btn-secondary">+ Add Shop</button>
+          </div>
+        </div>
+
+        <div class="resource-card">
+          <h5>🔩 Common Parts & Fixes</h5>
+          <div id="parts-list"></div>
+          <div class="add-form">
+            <input type="text" id="part-name" placeholder="Part name (e.g. Water pump)">
+            <input type="text" id="part-symptom" placeholder="For which symptom? (optional)">
+            <textarea id="part-notes" placeholder="Notes / source / cost estimate"></textarea>
+            <button onclick="addPart()" class="btn-small btn-secondary">+ Add Part/Fix</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- History -->
+      <div class="section">
+        <div class="section-title">History</div>
+        <div id="history-list"></div>
+        <button onclick="clearHistory()" class="btn-secondary" style="padding:8px; font-size:13px; background:#222;">
+          Clear History
+        </button>
+      </div>
+
+    </div>
+
+    <!-- Results Screen -->
+    <div id="results-screen" class="hidden">
+      <div class="section">
+        <div class="results-header">
+          <h2 style="margin:0; color:var(--accent);">Diagnosis</h2>
+          <button onclick="backToMain()" class="btn-secondary" style="width:auto; padding:8px 16px; font-size:14px;">← Back</button>
+        </div>
+        
+        <div id="vehicle-summary" style="background:#222; padding:10px 14px; border-radius:10px; margin-bottom:16px; font-size:14px;"></div>
+        
+        <div id="detected-banner" class="detected-banner hidden"></div>
+        
+        <div id="results-content"></div>
+
+        <div style="margin-top:20px;">
+          <div class="section-title" style="font-size:13px; margin-bottom:8px;">Quick Actions (Phase 4)</div>
+          <button onclick="quickAddPartsForCurrent()" class="quick-action">🔩 Add common parts for this issue</button>
+          <button onclick="quickAddTowNote()" class="quick-action">🚛 Log tow recommendation</button>
+          <button onclick="quickAddShopNote()" class="quick-action">🛠️ Note recommended shop type</button>
+        </div>
+        
+        <button onclick="newDiagnosis()" class="btn-primary" style="margin-top:16px; background:#222; color:#ffcc00;">
+          🔄 New Diagnosis
+        </button>
+        
+        <button onclick="saveToHistory()" class="btn-primary" style="margin-top:8px;">
+          💾 Save to History
+        </button>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="footer">
+    Built for Legends Garage • Fast • Smart • Yours<br>
+    <span class="credits">Co-designed &amp; built by <strong>Adam Hanson</strong> &amp; <strong>Liora</strong> • Warman, SK • v1.0 Complete</span>
+  </div>
+
+  <script>
+    let currentSymptom = null;
+    let currentVehicle = {};
+    let lastDescription = '';
+
+    function loadVehicle() {
+      const saved = localStorage.getItem('legend_vehicle');
+      if (saved) {
+        currentVehicle = JSON.parse(saved);
+        document.getElementById('year').value = currentVehicle.year || '';
+        document.getElementById('make').value = currentVehicle.make || '';
+        document.getElementById('model').value = currentVehicle.model || '';
+        document.getElementById('engine').value = currentVehicle.engine || '';
+      }
+    }
+
+    function saveVehicle() {
+      currentVehicle = {
+        year: document.getElementById('year').value.trim(),
+        make: document.getElementById('make').value.trim(),
+        model: document.getElementById('model').value.trim(),
+        engine: document.getElementById('engine').value.trim()
+      };
+      localStorage.setItem('legend_vehicle', JSON.stringify(currentVehicle));
+      alert('Vehicle profile saved.');
+    }
+
+    function startApp() {
+      document.getElementById('safety-screen').classList.add('hidden');
+      document.getElementById('main-app').classList.remove('hidden');
+      loadVehicle();
+      renderHistory();
+      renderResources();
+    }
+
+    function analyzeDescription() {
+      const text = document.getElementById('description-input').value.trim();
+      if (!text) {
+        alert('Please describe what\'s happening first.');
+        return;
+      }
+      lastDescription = text;
+      const detected = detectSymptomFromText(text);
+      if (detected) {
+        currentSymptom = detected;
+        showResults(detected, text);
+      } else {
+        alert('Couldn\'t perfectly match. Try tapping a common issue or add more details.');
+      }
+    }
+
+    function detectSymptomFromText(text) {
+      const t = text.toLowerCase();
+      if (t.includes('shake') || t.includes('vibration') || t.includes('vibrat') || t.includes('whirr') || t.includes('whir') || 
+          t.includes('shimmy') || t.includes('wobble') || t.includes('grinding') || t.includes('humming') || t.includes('rattling')) {
+        return 'shake';
+      }
+      if (t.includes('overheat') || t.includes('hot') || t.includes('temperature') || t.includes('steam') || 
+          t.includes('coolant') || t.includes('radiator') || t.includes('boiling') || t.includes('temp light') || t.includes('gauge')) {
+        return 'overheat';
+      }
+      if (t.includes('no start') || t.includes('won\'t start') || t.includes('died') || t.includes('stalled') || 
+          t.includes('cranks but') || t.includes('turns over but')) {
+        return 'nostart';
+      }
+      if (t.includes('battery') || t.includes('dead battery') || t.includes('won\'t turn over') || t.includes('dim lights')) {
+        return 'deadbat';
+      }
+      if (t.includes('flat tire') || t.includes('flat') || t.includes('puncture') || (t.includes('tire') && t.includes('low'))) {
+        return 'flattire';
+      }
+      if (t.includes('no crank') || t.includes('clicking') || t.includes('silent') || t.includes('nothing happens') || 
+          t.includes('won\'t crank') || t.includes('starter')) {
+        return 'nocrank';
+      }
+      return null;
+    }
+
+    function selectSymptom(type) {
+      currentSymptom = type;
+      lastDescription = '';
+      showResults(type);
+    }
+
+    function showResults(type, originalText = '') {
+      document.getElementById('main-app').classList.add('hidden');
+      document.getElementById('results-screen').classList.remove('hidden');
+
+      const vehicle = currentVehicle;
+      const vehicleHTML = vehicle.year || vehicle.make 
+        ? `<strong>${vehicle.year || ''} ${vehicle.make || ''} ${vehicle.model || ''}</strong> ${vehicle.engine ? '• ' + vehicle.engine : ''}`
+        : 'No vehicle profile saved';
+
+      document.getElementById('vehicle-summary').innerHTML = vehicleHTML;
+
+      const banner = document.getElementById('detected-banner');
+      if (originalText) {
+        banner.innerHTML = `<strong>Detected from your words:</strong> ${getSymptomLabel(type)}<br><span style="font-size:13px; color:#aaa;">“${originalText}”</span>`;
+        banner.classList.remove('hidden');
+      } else {
+        banner.classList.add('hidden');
+      }
+
+      let html = getLaneHTML(type);
+      document.getElementById('results-content').innerHTML = html;
+    }
+
+    function getLaneHTML(type) {
+      if (type === 'shake') {
+        return `
+          <div class="lane tow">
+            <h4>🚨 TOW NOW — Immediate Action Sequence</h4>
+            <div class="step"><strong>1. Pull over safely</strong> to the nearest exit or wide shoulder. Hazards on. This protects you and the tow operator.</div>
+            <div class="step"><strong>2. Call for tow immediately.</strong> Do not drive further.</div>
+            <div class="step"><strong>3. Stay in a safe spot</strong> away from traffic while waiting.</div>
+            <div class="step"><strong>Why:</strong> Driveshaft, CV axle, wheel bearing or tire separation can fail completely at speed. Whirr/grinding noise often means bearing or CV axle.</div>
+          </div>
+          <div class="lane shop">
+            <h4>🛠️ SHOP SOON — Action Plan</h4>
+            <div class="step"><strong>1. Drive carefully</strong> to a shop today or tomorrow if vibration is manageable.</div>
+            <div class="step"><strong>2. Have suspension, tires, wheels and drivetrain inspected.</strong></div>
+            <div class="step"><strong>Why:</strong> Worn tires, unbalanced wheels, suspension bushings or alignment issues.</div>
+          </div>
+          <div class="lane diy">
+            <h4>🔧 BASIC DIY — Quick Checks</h4>
+            <div class="step"><strong>1. Safely check tire pressure</strong> and look for bulges or damage.</div>
+            <div class="step"><strong>2. Do not drive long distances</strong> until inspected.</div>
+            <div class="step"><strong>Why:</strong> Simple low pressure or visible tire damage is the easiest thing to rule out first.</div>
+          </div>`;
+      } else if (type === 'nostart') {
+        return `
+          <div class="lane tow">
+            <h4>🚨 TOW NOW — Immediate Action Sequence</h4>
+            <div class="step"><strong>1. Pull over safely</strong> to the nearest exit or wide shoulder. Hazards on. This protects you and the tow operator.</div>
+            <div class="step"><strong>2. Do not keep cranking</strong> — it can damage the starter or flood the engine.</div>
+            <div class="step"><strong>3. Call for tow</strong> if you are on the highway or in an unsafe spot.</div>
+            <div class="step"><strong>Why:</strong> Possible fuel pump, timing belt/chain, major sensor or engine failure.</div>
+          </div>
+          <div class="lane shop">
+            <h4>🛠️ SHOP SOON — Action Plan</h4>
+            <div class="step"><strong>1. Have the vehicle scanned for codes</strong> and fuel pressure/spark checked.</div>
+            <div class="step"><strong>2. Do not assume it is “just the battery”.</strong></div>
+            <div class="step"><strong>Why:</strong> Alternator, crankshaft sensor, fuel delivery or immobilizer issues are common.</div>
+          </div>
+          <div class="lane diy">
+            <h4>🔧 BASIC DIY — Quick Checks</h4>
+            <div class="step"><strong>1. Check battery voltage</strong> (should be 12.6V+ when off).</div>
+            <div class="step"><strong>2. Clean terminals</strong> and try a jump pack.</div>
+            <div class="step"><strong>Why:</strong> Dead battery or poor connections are the most common and easiest to rule out.</div>
+          </div>`;
+      } else if (type === 'overheat') {
+        return `
+          <div class="lane tow">
+            <h4>🚨 TOW NOW — Immediate Action Sequence</h4>
+            <div class="step"><strong>1. Pull over safely</strong> to the nearest exit or wide shoulder. Hazards on. Turn engine off immediately.</div>
+            <div class="step"><strong>2. Do NOT add coolant while hot</strong> and do NOT keep driving.</div>
+            <div class="step"><strong>3. Call for tow.</strong></div>
+            <div class="step"><strong>Why:</strong> Risk of warped head or blown head gasket. Continuing to drive can destroy the engine.</div>
+          </div>
+          <div class="lane shop">
+            <h4>🛠️ SHOP SOON — Action Plan</h4>
+            <div class="step"><strong>1. Have the cooling system pressure tested.</strong></div>
+            <div class="step"><strong>2. Check water pump, radiator, thermostat and head gasket.</strong></div>
+            <div class="step"><strong>Why:</strong> These are the most common causes of overheating.</div>
+          </div>
+          <div class="lane diy">
+            <h4>🔧 BASIC DIY — Quick Checks</h4>
+            <div class="step"><strong>1. Only when completely cool</strong>, check coolant level and look for obvious leaks or damaged hoses/belts.</div>
+            <div class="step"><strong>2. Do NOT open the radiator cap while hot.</strong></div>
+            <div class="step"><strong>Why:</strong> Low coolant or visible leaks are quick to spot and often easy to address.</div>
+          </div>`;
+      } else if (type === 'deadbat') {
+        return `
+          <div class="lane tow">
+            <h4>🚨 TOW NOW (if stranded) — Immediate Action Sequence</h4>
+            <div class="step"><strong>1. Pull over safely</strong> to the nearest exit or wide shoulder. Hazards on.</div>
+            <div class="step"><strong>2. Try a jump start</strong> or call for tow if you are in a dangerous location.</div>
+            <div class="step"><strong>3. Do not leave lights or accessories on.</strong></div>
+            <div class="step"><strong>Why:</strong> Completely dead battery in a remote or unsafe spot.</div>
+          </div>
+          <div class="lane shop">
+            <h4>🛠️ SHOP SOON — Action Plan</h4>
+            <div class="step"><strong>1. Have the battery load tested</strong> and alternator output checked.</div>
+            <div class="step"><strong>2. Avoid cheap no-name batteries.</strong></div>
+            <div class="step"><strong>Why:</strong> Failing alternator or parasitic drain are common causes.</div>
+          </div>
+          <div class="lane diy">
+            <h4>🔧 BASIC DIY — Quick Checks</h4>
+            <div class="step"><strong>1. Check and clean battery terminals</strong> for corrosion.</div>
+            <div class="step"><strong>2. Test voltage</strong> and try a jump start.</div>
+            <div class="step"><strong>Why:</strong> Corroded connections or an old battery are the easiest things to rule out first.</div>
+          </div>`;
+      } else if (type === 'flattire') {
+        return `
+          <div class="lane tow">
+            <h4>🚨 TOW NOW (no spare/jack) — Immediate Action Sequence</h4>
+            <div class="step"><strong>1. Pull over safely</strong> to the nearest exit or wide shoulder. Hazards on.</div>
+            <div class="step"><strong>2. Call for tow</strong> if you do not have a spare, jack, or it is unsafe to change the tire.</div>
+            <div class="step"><strong>3. Do NOT drive on the flat</strong> — it will destroy the rim.</div>
+            <div class="step"><strong>Why:</strong> No spare, damaged rim, or unsafe location to change the tire.</div>
+          </div>
+          <div class="lane shop">
+            <h4>🛠️ SHOP SOON — Action Plan</h4>
+            <div class="step"><strong>1. Have the tire properly replaced</strong> at a shop (mounting + balancing).</div>
+            <div class="step"><strong>2. Do not use the spare long-term.</strong></div>
+            <div class="step"><strong>Why:</strong> Proper installation and a new tire are needed for safety.</div>
+          </div>
+          <div class="lane diy">
+            <h4>🔧 BASIC DIY — Quick Checks</h4>
+            <div class="step"><strong>1. Use your spare + jack + torque wrench.</strong> First check that the spare has proper pressure.</div>
+            <div class="step"><strong>2. Do not drive on the flat or under-inflated spare.</strong></div>
+            <div class="step"><strong>Why:</strong> Most flats are simple punctures or slow leaks and are easy to fix roadside.</div>
+          </div>`;
+      } else if (type === 'nocrank') {
+        return `
+          <div class="lane tow">
+            <h4>🚨 TOW NOW (security/immobilizer) — Immediate Action Sequence</h4>
+            <div class="step"><strong>1. Pull over safely</strong> to the nearest exit or wide shoulder. Hazards on.</div>
+            <div class="step"><strong>2. Check for a security/immobilizer light.</strong></div>
+            <div class="step"><strong>3. Do not keep trying</strong> — it drains the battery. Call for tow if needed.</div>
+            <div class="step"><strong>Why:</strong> Possible immobilizer, starter failure or major electrical issue.</div>
+          </div>
+          <div class="lane shop">
+            <h4>🛠️ SHOP SOON — Action Plan</h4>
+            <div class="step"><strong>1. Have starter draw tested</strong>, ignition switch and fuses checked.</div>
+            <div class="step"><strong>2. Do not ignore clicking sounds.</strong></div>
+            <div class="step"><strong>Why:</strong> Starter, solenoid, ignition switch or wiring problems.</div>
+          </div>
+          <div class="lane diy">
+            <h4>🔧 BASIC DIY — Quick Checks</h4>
+            <div class="step"><strong>1. Check battery voltage</strong> and clean terminals.</div>
+            <div class="step"><strong>2. Check main fuses.</strong></div>
+            <div class="step"><strong>Why:</strong> Weak battery or poor connections are the most common reasons for no-crank.</div>
+          </div>`;
+      }
+      return '';
+    }
+
+    function backToMain() {
+      document.getElementById('results-screen').classList.add('hidden');
+      document.getElementById('main-app').classList.remove('hidden');
+      document.getElementById('detected-banner').classList.add('hidden');
+      renderHistory();
+      renderResources();
+    }
+
+    function newDiagnosis() {
+      document.getElementById('results-screen').classList.add('hidden');
+      document.getElementById('main-app').classList.remove('hidden');
+      document.getElementById('detected-banner').classList.add('hidden');
+      document.getElementById('description-input').value = '';
+      currentSymptom = null;
+      lastDescription = '';
+    }
+
+    function saveToHistory() {
+      if (!currentSymptom) return;
+
+      const vehicle = currentVehicle;
+      const vehicleStr = vehicle.year || vehicle.make 
+        ? `${vehicle.year || ''} ${vehicle.make || ''} ${vehicle.model || ''}`.trim() 
+        : 'No vehicle';
+
+      const entry = {
+        id: Date.now(),
+        date: new Date().toLocaleString(),
+        symptom: currentSymptom,
+        symptomLabel: getSymptomLabel(currentSymptom),
+        vehicle: vehicleStr,
+        description: lastDescription || '',
+        timestamp: Date.now()
+      };
+
+      let history = JSON.parse(localStorage.getItem('legend_history') || '[]');
+      history.unshift(entry);
+      if (history.length > 20) history.pop();
+      localStorage.setItem('legend_history', JSON.stringify(history));
+
+      alert('Saved to History.');
+      backToMain();
+    }
+
+    function getSymptomLabel(type) {
+      const labels = {
+        'shake': 'Shaking / Vibration',
+        'nostart': 'No-start / Died while driving',
+        'overheat': 'Overheating',
+        'deadbat': 'Dead battery',
+        'flattire': 'Flat tire',
+        'nocrank': 'No-crank'
+      };
+      return labels[type] || type;
+    }
+
+    function renderHistory() {
+      const container = document.getElementById('history-list');
+      const history = JSON.parse(localStorage.getItem('legend_history') || '[]');
+
+      if (history.length === 0) {
+        container.innerHTML = '<p style="color:#666; font-size:14px;">No saved diagnoses yet.</p>';
+        return;
+      }
+
+      let html = '';
+      history.forEach(entry => {
+        const desc = entry.description ? `<div style="font-size:12px; color:#888; margin-top:4px;">“${entry.description}”</div>` : '';
+        html += `
+          <div class="history-item" onclick="loadHistoryEntry(${entry.id})">
+            <div class="date">${entry.date}</div>
+            <div class="symptom">${entry.symptomLabel}</div>
+            <div style="font-size:13px; color:#888;">${entry.vehicle}</div>
+            ${desc}
+          </div>
+        `;
+      });
+      container.innerHTML = html;
+    }
+
+    function loadHistoryEntry(id) {
+      const history = JSON.parse(localStorage.getItem('legend_history') || '[]');
+      const entry = history.find(e => e.id === id);
+      if (!entry) return;
+
+      currentSymptom = entry.symptom;
+      lastDescription = entry.description || '';
+      
+      document.getElementById('main-app').classList.add('hidden');
+      document.getElementById('results-screen').classList.remove('hidden');
+      document.getElementById('vehicle-summary').innerHTML = entry.vehicle || 'Vehicle from history';
+      
+      const banner = document.getElementById('detected-banner');
+      if (entry.description) {
+        banner.innerHTML = `<strong>From saved description:</strong> ${entry.symptomLabel}<br><span style="font-size:13px; color:#aaa;">“${entry.description}”</span>`;
+        banner.classList.remove('hidden');
+      } else {
+        banner.classList.add('hidden');
+      }
+      
+      showResults(entry.symptom, entry.description);
+    }
+
+    function clearHistory() {
+      if (confirm('Clear all history?')) {
+        localStorage.removeItem('legend_history');
+        renderHistory();
+      }
+    }
+
+    // Phase 4 Resources
+    function getResources() {
+      return JSON.parse(localStorage.getItem('legend_resources') || '{"tow":[],"shops":[],"parts":[]}');
+    }
+
+    function saveResources(resources) {
+      localStorage.setItem('legend_resources', JSON.stringify(resources));
+    }
+
+    function renderResources() {
+      const res = getResources();
+
+      let towHTML = res.tow.length === 0 ? '<p style="color:#666; font-size:13px;">No tow providers saved yet.</p>' : '';
+      res.tow.forEach((item, index) => {
+        towHTML += `
+          <div class="resource-item">
+            <div class="name">${item.name}</div>
+            <div class="detail">${item.phone || ''} ${item.notes ? '• ' + item.notes : ''}</div>
+            <button onclick="deleteResource('tow', ${index})" class="btn-small" style="background:#444; color:#fff; padding:4px 10px; font-size:11px; margin-top:6px;">Delete</button>
+          </div>
+        `;
+      });
+      document.getElementById('tow-list').innerHTML = towHTML;
+
+      let shopHTML = res.shops.length === 0 ? '<p style="color:#666; font-size:13px;">No shops saved yet.</p>' : '';
+      res.shops.forEach((item, index) => {
+        shopHTML += `
+          <div class="resource-item">
+            <div class="name">${item.name}</div>
+            <div class="detail">${item.phone || ''} ${item.notes ? '• ' + item.notes : ''}</div>
+            <button onclick="deleteResource('shops', ${index})" class="btn-small" style="background:#444; color:#fff; padding:4px 10px; font-size:11px; margin-top:6px;">Delete</button>
+          </div>
+        `;
+      });
+      document.getElementById('shop-list').innerHTML = shopHTML;
+
+      let partsHTML = res.parts.length === 0 ? '<p style="color:#666; font-size:13px;">No parts logged yet.</p>' : '';
+      res.parts.forEach((item, index) => {
+        partsHTML += `
+          <div class="resource-item">
+            <div class="name">${item.name}</div>
+            <div class="detail">${item.symptom ? 'For: ' + item.symptom + ' • ' : ''}${item.notes || ''}</div>
+            <button onclick="deleteResource('parts', ${index})" class="btn-small" style="background:#444; color:#fff; padding:4px 10px; font-size:11px; margin-top:6px;">Delete</button>
+          </div>
+        `;
+      });
+      document.getElementById('parts-list').innerHTML = partsHTML;
+    }
+
+    function addTowProvider() {
+      const name = document.getElementById('tow-name').value.trim();
+      if (!name) return alert('Enter a company name');
+      const res = getResources();
+      res.tow.push({ 
+        name, 
+        phone: document.getElementById('tow-phone').value.trim(), 
+        notes: document.getElementById('tow-notes').value.trim() 
+      });
+      saveResources(res);
+      renderResources();
+      document.getElementById('tow-name').value = '';
+      document.getElementById('tow-phone').value = '';
+      document.getElementById('tow-notes').value = '';
+    }
+
+    function addShop() {
+      const name = document.getElementById('shop-name').value.trim();
+      if (!name) return alert('Enter a shop name');
+      const res = getResources();
+      res.shops.push({ 
+        name, 
+        phone: document.getElementById('shop-phone').value.trim(), 
+        notes: document.getElementById('shop-notes').value.trim() 
+      });
+      saveResources(res);
+      renderResources();
+      document.getElementById('shop-name').value = '';
+      document.getElementById('shop-phone').value = '';
+      document.getElementById('shop-notes').value = '';
+    }
+
+    function addPart() {
+      const name = document.getElementById('part-name').value.trim();
+      if (!name) return alert('Enter a part name');
+      const res = getResources();
+      res.parts.push({ 
+        name, 
+        symptom: document.getElementById('part-symptom').value.trim(), 
+        notes: document.getElementById('part-notes').value.trim() 
+      });
+      saveResources(res);
+      renderResources();
+      document.getElementById('part-name').value = '';
+      document.getElementById('part-symptom').value = '';
+      document.getElementById('part-notes').value = '';
+    }
+
+    function deleteResource(type, index) {
+      if (!confirm('Delete this entry?')) return;
+      const res = getResources();
+      res[type].splice(index, 1);
+      saveResources(res);
+      renderResources();
+    }
+
+    function quickAddPartsForCurrent() {
+      if (!currentSymptom) return;
+      const res = getResources();
+      let suggestions = [];
+      if (currentSymptom === 'overheat') {
+        suggestions = [{name:'Thermostat',notes:'Common overheating failure'},{name:'Water pump',notes:'Leaks or noise'},{name:'Radiator',notes:'Pressure test'},{name:'Coolant hoses',notes:'Cracks/bulges'}];
+      } else if (currentSymptom === 'shake') {
+        suggestions = [{name:'CV axle',notes:'Clicking on turns'},{name:'Wheel bearing',notes:'Humming/grinding'},{name:'Tire balance',notes:'Quick first check'},{name:'Driveshaft',notes:'Speed vibration'}];
+      } else if (currentSymptom === 'deadbat' || currentSymptom === 'nocrank') {
+        suggestions = [{name:'Battery',notes:'Load test first'},{name:'Alternator',notes:'Common on trucks'},{name:'Starter',notes:'Clicking often starter'},{name:'Battery terminals',notes:'Clean corrosion'}];
+      } else {
+        suggestions = [{name:'General inspection',notes:'Scan for codes recommended'}];
+      }
+      suggestions.forEach(s => res.parts.push({name:s.name, symptom:getSymptomLabel(currentSymptom), notes:s.notes}));
+      saveResources(res);
+      alert('Parts added to Garage Resources!');
+      backToMain();
+    }
+
+    function quickAddTowNote() {
+      const res = getResources();
+      const label = currentSymptom ? getSymptomLabel(currentSymptom) : 'General';
+      res.tow.push({name:`Recommended for ${label}`, phone:'', notes:'Added from diagnosis'});
+      saveResources(res);
+      alert('Tow note logged.');
+      backToMain();
+    }
+
+    function quickAddShopNote() {
+      const res = getResources();
+      const label = currentSymptom ? getSymptomLabel(currentSymptom) : 'General';
+      res.shops.push({name:`Shop for ${label}`, phone:'', notes:'Added from diagnosis'});
+      saveResources(res);
+      alert('Shop note logged.');
+      backToMain();
+    }
+
+    document.addEventListener('keydown', function(e) {
+      if (e.key === '/' && !document.getElementById('main-app').classList.contains('hidden')) {
+        e.preventDefault();
+        document.getElementById('description-input').focus();
+      }
+    });
+
+    window.onload = function() {};
+  </script>
+</body>
+</html>
